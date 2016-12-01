@@ -12,9 +12,17 @@ module.exports = function(app){
     var apiRoutes = express.Router(),
         authRoutes = express.Router(),
         todoRoutes = express.Router();
+        testRoutes = express.Router();
 
     // Auth Routes
     apiRoutes.use('/auth', authRoutes);
+
+    //test the routes
+    apiRoutes.use('/test', testRoutes);
+    testRoutes.get('/testing', function(req, res) {
+      console.log('im in testing');
+      res.send({content: 'success'});
+    });
 
     authRoutes.post('/register', AuthenticationController.register);
     authRoutes.post('/login', requireLogin, AuthenticationController.login);
