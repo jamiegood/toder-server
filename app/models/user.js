@@ -1,53 +1,57 @@
 var mongoose = require('mongoose');
-var bcrypt = require('bcrypt-nodejs');
+var bcrypt   = require('bcrypt-nodejs');
 
 var UserSchema = new mongoose.Schema({
 
     email: {
-      type: String,
-      lowercase: true,
-      unique: true,
-      required: true
+        type: String,
+        lowercase: true,
+        unique: true,
+        required: true
     },
     password: {
-      type: String,
-      required: true
+        type: String,
+        required: true
     },
     role: {
-      type: String,
-      enum: ['reader', 'creator', 'editor'],
-      default: 'reader'
+        type: String,
+        enum: ['reader', 'creator', 'editor'],
+        default: 'reader'
     }
-  }, {
+
+}, {
     timestamps: true
-  }
-);
+});
 
-UserSchema.pre("save", function(next) {
+UserSchema.pre('save', function(next){
 
-  if(!user.isModified('password')){
-      return next();
-  }
+    var user = this;
+    var SALT_FACTOR = 5;
 
-  bcrypt.genSalt(SALT_FACTOR, function(err, salt){
+    if(!user.isModified('password')){
+        return next();
+    }
 
-      if(err){
-          return next(err);
-      }
+    bcrypt.genSalt(SALT_FACTOR, function(err, salt){
 
-      bcrypt.hash(user.password, salt, null, function(err, hash){
+        if(err){
+            return next(err);
+        }
 
-          if(err){
-              return next(err);
-          }
+        bcrypt.hash(user.password, salt, null, function(err, hash){
 
-          user.password = hash;
-          next();
+            if(err){
+                return next(err);
+            }
 
-      });
+            user.password = hash;
+            next();
 
-  });
-})
+        });
+
+    });
+
+});
 
 UserSchema.methods.comparePassword = function(passwordAttempt, cb){
 
