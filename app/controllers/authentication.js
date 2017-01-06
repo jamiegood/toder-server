@@ -18,7 +18,11 @@ function setUserInfo(request){
 
 exports.login = function(req, res, next){
 
-    //console.log(req);
+    console.log("I AM HERE");
+    console.log(req);
+    console.log(res);
+    console.log("AFTER I AM HERE");
+    //die();
 
     var userInfo = setUserInfo(req.user);
 
@@ -85,6 +89,8 @@ exports.roleAuthorization = function(roles){
         var user = req.user;
 
         User.findById(user._id, function(err, foundUser){
+
+            console.log(foundUser);
 
             if(err){
                 res.status(422).json({error: 'No user found.'});

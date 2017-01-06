@@ -11,14 +11,17 @@ var localOptions = {
 
 var localLogin = new LocalStrategy(localOptions, function(email, password, done){
 
+  console.log('LocalLogin');
 
-  //  debugger;
+    debugger;
 
     User.findOne({
         email: email
     }, function(err, user){
 
         //debugger;
+        console.log(user);
+        console.log(err);
 
         if(err){
             return done(err);
